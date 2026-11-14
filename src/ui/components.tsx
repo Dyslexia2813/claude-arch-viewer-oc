@@ -185,7 +185,3 @@ export function BackButton({ onClick, label = 'Назад' }: { onClick: () => v
     </button>
   );
 }
-
-export function ProgressOverlay() {
-  return null;
-}
