@@ -10,6 +10,10 @@ export function Overview() {
 
   const loadedFilenames = new Set(a.sources.map((source) => source.filename.toLowerCase()));
   const manifestFiles = a.manifest?.data_files ?? [];
+  const totalCategories = manifestFiles.length || a.sources.length;
+  const loadedCategories = manifestFiles.length
+    ? manifestFiles.filter((file) => loadedFilenames.has(file.filename.toLowerCase())).length
+    : a.sources.length;
   const expires = a.manifest ? manifestExpiresAt(a.manifest) : null;
   const blockEntries = Object.entries(a.stats.blockCounts).sort((x, y) => y[1] - x[1]);
   const maxBlock = Math.max(1, ...blockEntries.map(([, count]) => count));
@@ -47,8 +51,8 @@ export function Overview() {
         <section class="panel">
           <div class="panel-heading">
             <h2>Покрытие категорий</h2>
-            <Badge tone={manifestFiles.every((file) => loadedFilenames.has(file.filename.toLowerCase())) ? 'ok' : 'warning'}>
-              {manifestFiles.filter((file) => loadedFilenames.has(file.filename.toLowerCase())).length} / {manifestFiles.length || a.sources.length}
+            <Badge tone={loadedCategories === totalCategories ? 'ok' : 'warning'}>
+              {loadedCategories} / {totalCategories}
             </Badge>
           </div>
           {manifestFiles.length > 0 ? (
