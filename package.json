@@ -1,0 +1,39 @@
+{
+  "name": "claude-arch-viewer-oc",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Локальный просмотрщик и восстановление архива Claude",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "build:single": "tsc --noEmit && vite build --mode single",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "typecheck": "tsc --noEmit",
+    "icons": "node scripts/generate-icons.mjs"
+  },
+  "dependencies": {
+    "@preact/signals": "^2.0.1",
+    "dompurify": "^3.2.4",
+    "fflate": "^0.8.2",
+    "highlight.js": "^11.11.1",
+    "marked": "^15.0.7",
+    "preact": "^10.26.2"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.65.1",
+    "@preact/preset-vite": "^2.10.1",
+    "@testing-library/preact": "^3.2.6",
+    "happy-dom": "^21.0.4",
+    "typescript": "^5.7.3",
+    "vite": "^6.1.0",
+    "vite-plugin-singlefile": "^2.1.0",
+    "vitest": "^3.0.5"
+  }
+}

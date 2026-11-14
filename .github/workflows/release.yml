@@ -1,0 +1,27 @@
+name: Release single-file build
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build:single
+      - name: Rename artifact
+        run: cp dist/index.html claude-arch-viewer.html
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: claude-arch-viewer.html
+          generate_release_notes: true
