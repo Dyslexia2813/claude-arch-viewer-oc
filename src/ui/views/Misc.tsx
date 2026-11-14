@@ -10,6 +10,7 @@ import {
   includeToolResults,
   openConversation,
   openFrame,
+  openInlineArtifact,
   openProject,
   selectedCloudChannel,
   selectedFile,
@@ -400,6 +401,7 @@ const KIND_LABELS: Record<SimpleHit['kind'], string> = {
   conversation: 'Чат',
   project: 'Проект',
   frame: 'Frames',
+  inline: 'Артефакт',
   memory: 'Память',
   cloud: 'Cloud',
 };
@@ -408,6 +410,7 @@ function openHit(hit: SimpleHit): void {
   if (hit.kind === 'conversation') openConversation(hit.id);
   else if (hit.kind === 'project') openProject(hit.id);
   else if (hit.kind === 'frame') openFrame(hit.id);
+  else if (hit.kind === 'inline') openInlineArtifact(hit.id);
   else if (hit.kind === 'memory') {
     go('memory');
     selectedMemory.value = hit.id;

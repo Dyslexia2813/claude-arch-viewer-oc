@@ -1,4 +1,4 @@
-import type { Archive, CloudMessage, Conversation, FrameArtifact, MemoryFile, Message, Project } from './types';
+import type { Archive, CloudMessage, Conversation, FrameArtifact, InlineArtifact, MemoryFile, Message, Project } from './types';
 import { truncate } from './utils';
 
 export interface ConversationHit {
@@ -13,7 +13,7 @@ export interface SimpleHit {
   subtitle?: string;
   snippet: string;
   score: number;
-  kind: 'conversation' | 'project' | 'frame' | 'memory' | 'cloud';
+  kind: 'conversation' | 'project' | 'frame' | 'inline' | 'memory' | 'cloud';
 }
 
 interface ConversationSearchEntry {
@@ -179,6 +179,34 @@ export function searchFrames(frames: FrameArtifact[], query: string): SimpleHit[
     .filter((hit): hit is SimpleHit => hit !== null);
 }
 
+export function searchInlineArtifacts(artifacts: InlineArtifact[], query: string): SimpleHit[] {
+  const q = query.trim().toLowerCase();
+  if (!q) return [];
+  return artifacts
+    .map((artifact): SimpleHit | null => {
+      const haystack = [
+        artifact.title,
+        artifact.type ?? '',
+        artifact.language ?? '',
+        artifact.conversationName,
+        artifact.content,
+      ]
+        .join('\n')
+        .toLowerCase();
+      const index = haystack.indexOf(q);
+      if (index === -1) return null;
+      return {
+        id: `${artifact.conversationUuid}:${artifact.id}`,
+        title: artifact.title,
+        subtitle: `Артефакт из чата · ${artifact.conversationName}`,
+        snippet: makeSnippet(haystack, q),
+        score: 1,
+        kind: 'inline',
+      };
+    })
+    .filter((hit): hit is SimpleHit => hit !== null);
+}
+
 export function searchCloudMessages(messages: CloudMessage[], query: string): SimpleHit[] {
   const q = query.trim().toLowerCase();
   if (!q) return [];
@@ -213,6 +241,7 @@ export function searchArchive(archive: Archive, query: string, includeToolResult
     ...conversations,
     ...searchProjects(archive.projects, query),
     ...searchFrames(archive.frames, query),
+    ...searchInlineArtifacts(archive.inlineArtifacts, query),
     ...searchMemories(archive.memories, query),
     ...searchCloudMessages(archive.cloud.messages, query),
   ].sort((a, b) => b.score - a.score);
