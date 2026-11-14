@@ -36,7 +36,7 @@ npm install
 npm run dev
 ```
 
-Откройте адрес из терминала, перетащите в окно manifest и ZIP-файлы архива.
+Откройте адрес из терминала и нажмите **«Открыть демо-архив»** или перетащите в окно manifest и ZIP-файлы реального архива.
 
 ### Как получить архив
 
@@ -81,6 +81,7 @@ npm run typecheck    # проверка TypeScript
 npm test             # unit + UI-тесты (Vitest)
 npm run test:e2e     # Playwright e2e (нужен Chromium)
 npm run icons        # перегенерировать PNG-иконки
+npm run demo         # перегенерировать демо-архив
 ```
 
 ## Архитектура

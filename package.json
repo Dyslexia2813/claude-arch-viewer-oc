@@ -16,7 +16,8 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "typecheck": "tsc --noEmit",
-    "icons": "node scripts/generate-icons.mjs"
+    "icons": "node scripts/generate-icons.mjs",
+    "demo": "node scripts/generate-demo.mjs"
   },
   "dependencies": {
     "@preact/signals": "^2.0.1",

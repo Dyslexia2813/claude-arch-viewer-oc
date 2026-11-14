@@ -89,6 +89,18 @@ export function Welcome({ onFiles }: { onFiles: (files: File[]) => void }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const currentManifest = manifest.value ?? archive.value?.manifest;
 
+  const openDemo = async () => {
+    try {
+      const response = await fetch('./demo/demo-export.zip');
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const blob = await response.blob();
+      onFiles([new File([blob], 'demo-export.zip', { type: 'application/zip' })]);
+    } catch (cause) {
+      error.value = `Не удалось загрузить демо-архив: ${cause instanceof Error ? cause.message : String(cause)}`;
+    }
+  };
+
+
   return (
     <div class="welcome">
       <div class="welcome-hero">
@@ -103,6 +115,9 @@ export function Welcome({ onFiles }: { onFiles: (files: File[]) => void }) {
         <div class="welcome-actions">
           <button type="button" class="button button-primary button-large" onClick={() => inputRef.current?.click()}>
             <Icon name="plus" size={18} /> Выбрать ZIP или manifest
+          </button>
+          <button type="button" class="button button-large" onClick={openDemo}>
+            <Icon name="artifact" size={18} /> Открыть демо-архив
           </button>
           <span class="muted small">или перетащите файлы в окно</span>
         </div>
@@ -153,7 +168,7 @@ export function Welcome({ onFiles }: { onFiles: (files: File[]) => void }) {
 
       <p class="privacy-note">
         <Icon name="info" size={16} />
-        Всё работает локально. Приложение не отправляет содержимое архива в сеть.
+        Всё работает локально. Приложение не отправляет содержимое архива в сеть. Демо-архив содержит только синтетические данные.
       </p>
     </div>
   );
