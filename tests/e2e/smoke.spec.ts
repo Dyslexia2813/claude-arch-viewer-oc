@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { existsSync } from 'node:fs';
+import { existsSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 const samplesDir = resolve(process.cwd(), 'samples');
@@ -12,7 +12,9 @@ const zipNames = [
   'claude_code_cloud-000.zip',
   'conversations-000.zip',
 ];
-const manifestName = 'manifest-0f28ab5b-8183-425a-84c8-10db244ece62-1793289609-07903801-2026-10-29-16-02-53.json';
+const manifestName = existsSync(samplesDir)
+  ? readdirSync(samplesDir).find((name) => name.startsWith('manifest-') && name.endsWith('.json')) ?? ''
+  : '';
 const hasSamples = zipNames.every((name) => existsSync(resolve(samplesDir, name)));
 
 test.skip(!hasSamples, 'Нет локальных samples для e2e.');

@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import { beforeAll, describe, expect, it } from 'vitest';
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { h } from 'preact';
 import { cleanup, fireEvent, render, screen } from '@testing-library/preact';
@@ -18,8 +18,10 @@ const zipNames = [
   'claude_code_cloud-000.zip',
   'conversations-000.zip',
 ];
-const manifestName = 'manifest-0f28ab5b-8183-425a-84c8-10db244ece62-1793289609-07903801-2026-10-29-16-02-53.json';
-const hasSamples = zipNames.every((name) => existsSync(resolve(samplesDir, name))) && existsSync(resolve(samplesDir, manifestName));
+const manifestName = existsSync(samplesDir)
+  ? readdirSync(samplesDir).find((name) => name.startsWith('manifest-') && name.endsWith('.json')) ?? ''
+  : '';
+const hasSamples = zipNames.every((name) => existsSync(resolve(samplesDir, name))) && Boolean(manifestName);
 
 describe.skipIf(!hasSamples)('UI на реальном архиве', () => {
   beforeAll(async () => {
